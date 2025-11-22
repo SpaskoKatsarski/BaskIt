@@ -2,6 +2,8 @@
 
 public class Product
 {
+    public Guid ProductId { get; set; }
+
     public string Name { get; set; } = null!;
 
     public decimal Price { get; set; }
@@ -14,7 +16,7 @@ public class Product
 
     public string? Description { get; set; }
 
-    public string UserId { get; set; } = null!;
+    public Guid UserId { get; set; }
 
     public ApplicationUser User { get; set; } = null!;
 }

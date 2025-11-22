@@ -3,7 +3,7 @@ using BaskIt.Data.Common.Repository;
 using BaskIt.Shared.DTOs.Page;
 using Microsoft.EntityFrameworkCore;
 
-namespace BaskIt.Infrastructure.Repository;
+namespace BaskIt.Data.Common.Repository;
 
 public class Repository : IRepository
 {

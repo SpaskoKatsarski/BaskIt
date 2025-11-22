@@ -1,20 +1,24 @@
-using BaskIt.API.Data;
+using BaskIt.API.Middleware;
+using BaskIt.Data;
+using BaskIt.Data.Common.Repository;
+using BaskIt.Domain.Entities;
 using BaskIt.Services.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Scalar.AspNetCore;
+using static BaskIt.Shared.Constants.ApplicationConstants;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-// Add PostgreSQL database with Aspire
-builder.AddNpgsqlDbContext<BaskItDbContext>("basketdb");
+builder.AddNpgsqlDbContext<BaskItDbContext>(connectionName: DatabaseName);
 
 // Add Identity services
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
 {
     // Password settings (customize as needed)
     options.Password.RequireDigit = true;
@@ -47,6 +51,10 @@ builder.Services.AddAuthorization();
 builder.Services.AddTransient<IRepository, Repository>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 
+// Add exception handler
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 // Add services to the container.
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -64,9 +72,12 @@ if (app.Environment.IsDevelopment())
 app.MapDefaultEndpoints();
 
 // Configure the HTTP request pipeline.
+app.UseExceptionHandler();
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();
@@ -76,4 +87,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();

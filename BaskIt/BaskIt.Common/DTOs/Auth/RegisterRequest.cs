@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace BaskIt.API.Models;
-
+namespace BaskIt.Shared.DTOs.Auth;
 public class RegisterRequest
 {
     [Required]

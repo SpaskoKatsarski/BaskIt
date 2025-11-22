@@ -1,13 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="14.0.0-beta-1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BaskIt.Common\BaskIt.Shared.csproj" />
+    <ProjectReference Include="..\BaskIt.Services\BaskIt.Services.csproj" />
   </ItemGroup>
 
 </Project>

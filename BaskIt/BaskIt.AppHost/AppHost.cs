@@ -1,12 +1,12 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-// Add PostgreSQL database with a named database
 var postgres = builder.AddPostgres("postgres")
-    .WithPgAdmin()  // Optional: Adds PgAdmin for database management UI
-    .AddDatabase("baskitdb");
+    .WithDataVolume(isReadOnly: false)
+    .WithPgWeb(config => config.WithHostPort(5050));
 
-// Add API project and pass database reference
+var postgresdb = postgres.AddDatabase("baskitdb");
+
 builder.AddProject<Projects.BaskIt_API>("baskit-api")
-    .WithReference(postgres);
+    .WithReference(postgresdb);
 
 builder.Build().Run();
