@@ -3,4 +3,4 @@ using MediatR;
 
 namespace BaskIt.Commands.Register;
 
-public record RegisterCommand(RegisterRequest RegisterRequest) : IRequest<string>;
+public record RegisterCommand(RegisterRequest RegisterRequest) : IRequest;

@@ -19,9 +19,9 @@ builder.AddNpgsqlDbContext<BaskItDbContext>(connectionName: DatabaseName);
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
 {
-    options.Password.RequireDigit = true;
-    options.Password.RequireLowercase = true;
-    options.Password.RequireUppercase = true;
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequiredLength = 4;
 })
@@ -44,6 +44,25 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddAuthorization();
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
+builder.Services.AddMediatR(cfg =>
+{
+    // Reference marker classes.
+    cfg.RegisterServicesFromAssemblies(
+        typeof(BaskIt.Commands.AssemblyReference).Assembly,
+        typeof(BaskIt.Queries.AssemblyReference).Assembly
+    );
+});
 
 builder.Services.AddTransient<IRepository, Repository>();
 builder.Services.AddScoped<IJwtService, JwtService>();
@@ -76,6 +95,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace BaskIt.Commands.Register;
 
-public class RegisterCommandHandler : IRequestHandler<RegisterCommand, string>
+public class RegisterCommandHandler : IRequestHandler<RegisterCommand>
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IJwtService _jwtService;
@@ -16,8 +16,13 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, string>
         _jwtService = jwtService;
     }
 
-    public async Task<string> Handle(RegisterCommand request, CancellationToken cancellationToken)
+    public async Task Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
+        if (!string.Equals(request.RegisterRequest.Password, request.RegisterRequest.ConfirmPassword))
+        {
+            throw new ArgumentException("Passwords do not match.");
+        }
+
         var user = new ApplicationUser
         {
             UserName = request.RegisterRequest.Email,
@@ -33,9 +38,5 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, string>
             var errors = string.Join(", ", result.Errors.Select(e => e.Description));
             throw new InvalidOperationException($"User registration failed: {errors}");
         }
-
-        var token = _jwtService.GenerateJwtToken(user.Email);
-
-        return token;
     }
 }

@@ -18,7 +18,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
@@ -27,9 +27,9 @@ public class AuthController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        var token = await this.mediator.Send(new RegisterCommand(request));
+        await this.mediator.Send(new RegisterCommand(request));
 
-        return Ok(token);
+        return Ok();
     }
 
     [HttpPost("login")]
