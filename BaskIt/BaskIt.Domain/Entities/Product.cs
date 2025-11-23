@@ -2,7 +2,7 @@
 
 public class Product
 {
-    public Guid ProductId { get; set; }
+    public Guid Id { get; set; }
 
     public string Name { get; set; } = null!;
 
@@ -16,7 +16,7 @@ public class Product
 
     public string? Description { get; set; }
 
-    public Guid UserId { get; set; }
+    public Guid BasketId { get; set; }
 
-    public ApplicationUser User { get; set; } = null!;
+    public Basket Basket { get; set; } = null!;
 }

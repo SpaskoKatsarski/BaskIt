@@ -11,4 +11,6 @@ public class Basket
     public Guid UserId { get; set; }
 
     public ApplicationUser User { get; set; } = null!;
+
+    public ICollection<Product> Products { get; set; } = new HashSet<Product>();
 }

@@ -10,5 +10,5 @@ public class ApplicationUser : IdentityUser<Guid>
 
     public string? TelegramUserId { get; set; }
 
-    public ICollection<Product> Products { get; set; } = new HashSet<Product>();
+    public ICollection<Basket> Baskets { get; set; } = new HashSet<Basket>();
 }

@@ -17,7 +17,7 @@ namespace BaskIt.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.9")
+                .HasAnnotation("ProductVersion", "9.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -98,10 +98,36 @@ namespace BaskIt.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("BaskIt.Domain.Entities.Basket", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Baskets");
+                });
+
             modelBuilder.Entity("BaskIt.Domain.Entities.Product", b =>
                 {
-                    b.Property<Guid>("ProductId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("BasketId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Color")
@@ -120,16 +146,13 @@ namespace BaskIt.Data.Migrations
                     b.Property<string>("Size")
                         .HasColumnType("text");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("WebsiteUrl")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("ProductId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("BasketId");
 
                     b.ToTable("Products");
                 });
@@ -264,15 +287,26 @@ namespace BaskIt.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("BaskIt.Domain.Entities.Product", b =>
+            modelBuilder.Entity("BaskIt.Domain.Entities.Basket", b =>
                 {
                     b.HasOne("BaskIt.Domain.Entities.ApplicationUser", "User")
-                        .WithMany("Products")
+                        .WithMany("Baskets")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BaskIt.Domain.Entities.Product", b =>
+                {
+                    b.HasOne("BaskIt.Domain.Entities.Basket", "Basket")
+                        .WithMany("Products")
+                        .HasForeignKey("BasketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Basket");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -327,6 +361,11 @@ namespace BaskIt.Data.Migrations
                 });
 
             modelBuilder.Entity("BaskIt.Domain.Entities.ApplicationUser", b =>
+                {
+                    b.Navigation("Baskets");
+                });
+
+            modelBuilder.Entity("BaskIt.Domain.Entities.Basket", b =>
                 {
                     b.Navigation("Products");
                 });
