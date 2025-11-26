@@ -12,6 +12,8 @@ using Scalar.AspNetCore;
 using static BaskIt.Shared.Constants.ApplicationConstants;
 using System.Threading.RateLimiting;
 using BaskIt.Services.Scrape.WebFetcher;
+using BaskIt.Services.Scrape.ProductScraper;
+using BaskIt.Services.Scrape.ProductScraper.Strategies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -90,6 +92,13 @@ builder.Services.AddHttpClient("WebScraper", client =>
 builder.Services.AddTransient<IRepository, Repository>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IWebContentFetcher, WebContentFetcher>();
+
+builder.Services.AddScoped<IProductScraperStrategy, JsonLdProductStrategy>();
+builder.Services.AddScoped<IProductScraperStrategy, OpenGraphProductStrategy>();
+builder.Services.AddScoped<IProductScraperStrategy, MicrodataProductStrategy>();
+builder.Services.AddScoped<IProductScraperStrategy, GenericHtmlProductStrategy>();
+
+builder.Services.AddScoped<IProductScraperService, ProductScraperService>();
 
 // Add exception handler
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();

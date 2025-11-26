@@ -34,6 +34,12 @@ public class WebContentFetcher : IWebContentFetcher
 
             response.EnsureSuccessStatusCode();
 
+            var contentType = response.Content.Headers.ContentType?.MediaType;
+            if (contentType != null && !contentType.Contains("text/html", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException($"Expected HTML content but received '{contentType}' from {url}");
+            }
+
             return await response.Content.ReadAsStringAsync(ct);
         }
         catch (HttpRequestException ex)
