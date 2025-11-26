@@ -11,6 +11,7 @@ using System.Text;
 using Scalar.AspNetCore;
 using static BaskIt.Shared.Constants.ApplicationConstants;
 using System.Threading.RateLimiting;
+using BaskIt.Services.Scrape.WebFetcher;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,7 +69,7 @@ builder.Services.AddMediatR(cfg =>
 builder.Services.AddSingleton<RateLimiter>(_ => new SlidingWindowRateLimiter(new SlidingWindowRateLimiterOptions
 {
     PermitLimit = 10,
-    Window = TimeSpan.FromSeconds(10),
+    Window = TimeSpan.FromSeconds(1),
     SegmentsPerWindow = 2,
     QueueLimit = 5
 }));
@@ -76,7 +77,7 @@ builder.Services.AddSingleton<RateLimiter>(_ => new SlidingWindowRateLimiter(new
 builder.Services.AddHttpClient("WebScraper", client =>
 {
     // Chrome user-agent to avoid bot detection
-    client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari / 537.36");
+    client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
     client.Timeout = TimeSpan.FromSeconds(30);
 })
     .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
@@ -88,6 +89,7 @@ builder.Services.AddHttpClient("WebScraper", client =>
 
 builder.Services.AddTransient<IRepository, Repository>();
 builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IWebContentFetcher, WebContentFetcher>();
 
 // Add exception handler
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
