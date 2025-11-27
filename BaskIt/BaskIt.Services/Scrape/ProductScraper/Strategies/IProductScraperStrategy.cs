@@ -19,5 +19,5 @@ public interface IProductScraperStrategy
     /// <summary>
     /// Extracts product data from the document.
     /// </summary>
-    ProductScrapedDto? Extract(IDocument document, string sourceUrl);
+    Task<ProductScrapedDto?> Extract(IDocument document, string sourceUrl);
 }

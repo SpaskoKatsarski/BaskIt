@@ -2,10 +2,10 @@
   <Project Path="BaskIt.API/BaskIt.API.csproj" />
   <Project Path="BaskIt.AppHost/BaskIt.AppHost.csproj" />
   <Project Path="BaskIt.Commands/BaskIt.Commands.csproj" Id="cd53e6ed-12bc-4f7a-abb6-64ca2c98c459" />
-  <Project Path="BaskIt.Common/BaskIt.Shared.csproj" Id="7be949d6-a146-41b0-a3b1-fbcd0c9dc6c2" />
   <Project Path="BaskIt.Data/BaskIt.Data.csproj" Id="8145a4a5-994e-48d6-90df-56ae25740a3f" />
   <Project Path="BaskIt.Domain/BaskIt.Domain.csproj" Id="936f59a4-29e7-4e66-a2ba-5af6202d9dcc" />
   <Project Path="BaskIt.Queries/BaskIt.Queries.csproj" Id="1e8403fb-867a-4d20-bbba-617192f57244" />
   <Project Path="BaskIt.ServiceDefaults/BaskIt.ServiceDefaults.csproj" />
   <Project Path="BaskIt.Services/BaskIt.Services.csproj" Id="6c47b1ba-f0b3-4cf7-8b8c-0c3504855847" />
+  <Project Path="BaskIt.Shared/BaskIt.Shared.csproj" Id="7bda34c5-6646-4e4e-9546-ba8eaade272e" />
 </Solution>

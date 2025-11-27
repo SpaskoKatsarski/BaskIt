@@ -9,11 +9,13 @@
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="1.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
+    <PackageReference Include="OpenAI" Version="2.7.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BaskIt.Common\BaskIt.Shared.csproj" />
     <ProjectReference Include="..\BaskIt.Data\BaskIt.Data.csproj" />
+    <ProjectReference Include="..\BaskIt.Shared\BaskIt.Shared.csproj" />
   </ItemGroup>
 
 </Project>

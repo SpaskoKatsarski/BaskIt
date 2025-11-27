@@ -17,6 +17,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="OpenAI" Version="2.7.0" />
     <PackageReference Include="Scalar.AspNetCore" Version="2.11.0" />
   </ItemGroup>
 
@@ -25,6 +26,7 @@
     <ProjectReference Include="..\BaskIt.Common\BaskIt.Shared.csproj" />
     <ProjectReference Include="..\BaskIt.Queries\BaskIt.Queries.csproj" />
     <ProjectReference Include="..\BaskIt.ServiceDefaults\BaskIt.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\BaskIt.Shared\BaskIt.Shared.csproj" />
   </ItemGroup>
 
 </Project>

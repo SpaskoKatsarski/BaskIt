@@ -1,19 +1,19 @@
+using BaskIt.API.Extensions;
 using BaskIt.API.Middleware;
 using BaskIt.Data;
 using BaskIt.Data.Common.Repository;
 using BaskIt.Domain.Entities;
 using BaskIt.Services.Jwt;
+using BaskIt.Services.Scrape.ProductScraper;
+using BaskIt.Services.Scrape.ProductScraper.Strategies;
+using BaskIt.Services.Scrape.WebFetcher;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Scalar.AspNetCore;
+using System.Text;
 using static BaskIt.Shared.Constants.ApplicationConstants;
-using System.Threading.RateLimiting;
-using BaskIt.Services.Scrape.WebFetcher;
-using BaskIt.Services.Scrape.ProductScraper;
-using BaskIt.Services.Scrape.ProductScraper.Strategies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,26 +68,7 @@ builder.Services.AddMediatR(cfg =>
     );
 });
 
-builder.Services.AddSingleton<RateLimiter>(_ => new SlidingWindowRateLimiter(new SlidingWindowRateLimiterOptions
-{
-    PermitLimit = 10,
-    Window = TimeSpan.FromSeconds(1),
-    SegmentsPerWindow = 2,
-    QueueLimit = 5
-}));
-
-builder.Services.AddHttpClient("WebScraper", client =>
-{
-    // Chrome user-agent to avoid bot detection
-    client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
-    client.Timeout = TimeSpan.FromSeconds(30);
-})
-    .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
-    {
-        PooledConnectionLifetime = TimeSpan.FromMinutes(5),
-        AutomaticDecompression = System.Net.DecompressionMethods.All
-    })
-    .AddStandardResilienceHandler();
+builder.Services.AddWebScraperServices();
 
 builder.Services.AddTransient<IRepository, Repository>();
 builder.Services.AddScoped<IJwtService, JwtService>();
@@ -97,6 +78,7 @@ builder.Services.AddScoped<IProductScraperStrategy, JsonLdProductStrategy>();
 builder.Services.AddScoped<IProductScraperStrategy, OpenGraphProductStrategy>();
 builder.Services.AddScoped<IProductScraperStrategy, MicrodataProductStrategy>();
 builder.Services.AddScoped<IProductScraperStrategy, GenericHtmlProductStrategy>();
+builder.Services.AddScoped<IProductScraperStrategy, AiProductScraperStrategy>();
 
 builder.Services.AddScoped<IProductScraperService, ProductScraperService>();
 

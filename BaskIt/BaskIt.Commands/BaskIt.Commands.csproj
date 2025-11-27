@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BaskIt.Common\BaskIt.Shared.csproj" />
     <ProjectReference Include="..\BaskIt.Services\BaskIt.Services.csproj" />
+    <ProjectReference Include="..\BaskIt.Shared\BaskIt.Shared.csproj" />
   </ItemGroup>
 
 </Project>

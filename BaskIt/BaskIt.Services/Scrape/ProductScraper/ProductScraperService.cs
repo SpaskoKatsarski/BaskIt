@@ -31,7 +31,7 @@ public class ProductScraperService : IProductScraperService
         {
             if (strategy.CanHandle(document, sourceUrl))
             {
-                var result = strategy.Extract(document, sourceUrl);
+                var result = await strategy.Extract(document, sourceUrl);
 
                 if (result != null)
                 {

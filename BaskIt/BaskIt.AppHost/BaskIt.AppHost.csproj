@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Sdk Name="Aspire.AppHost.Sdk" Version="9.5.2" />
 
@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BaskIt.API\BaskIt.API.csproj" />
-    <ProjectReference Include="..\BaskIt.Common\BaskIt.Shared.csproj" />
   </ItemGroup>
 
 </Project>

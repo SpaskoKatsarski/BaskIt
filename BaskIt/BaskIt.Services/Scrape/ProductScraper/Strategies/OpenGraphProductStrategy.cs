@@ -20,13 +20,13 @@ public class OpenGraphProductStrategy : IProductScraperStrategy
                 ogType.Equals("product.item", StringComparison.OrdinalIgnoreCase));
     }
 
-    public ProductScrapedDto? Extract(IDocument document, string sourceUrl)
+    public Task<ProductScrapedDto?> Extract(IDocument document, string sourceUrl)
     {
         var name = GetMetaContent(document, "og:title")
                    ?? GetMetaContent(document, "og:product:title");
 
         if (string.IsNullOrWhiteSpace(name))
-            return null;
+            return Task.FromResult<ProductScrapedDto?>(null);
 
         var price = ExtractPrice(document);
         var description = GetMetaContent(document, "og:description")
@@ -38,7 +38,7 @@ public class OpenGraphProductStrategy : IProductScraperStrategy
         var size = GetMetaContent(document, "og:product:size")
                    ?? GetMetaContent(document, "product:size");
 
-        return new ProductScrapedDto
+        return Task.FromResult<ProductScrapedDto?>(new ProductScrapedDto
         {
             Name = name,
             Price = price,
@@ -46,7 +46,7 @@ public class OpenGraphProductStrategy : IProductScraperStrategy
             Description = description,
             Color = color,
             Size = size
-        };
+        });
     }
 
     private string? GetMetaContent(IDocument document, string property)

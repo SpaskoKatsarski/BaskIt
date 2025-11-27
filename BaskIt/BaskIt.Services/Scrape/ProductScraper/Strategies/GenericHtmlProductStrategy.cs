@@ -13,22 +13,27 @@ public class GenericHtmlProductStrategy : IProductScraperStrategy
 
     public bool CanHandle(IDocument document, string? url)
     {
-        // Always returns true as a fallback
-        return true;
+        var name = document.QuerySelector("h1.product-title")?.TextContent?.Trim()
+                   ?? document.QuerySelector("h1.product-name")?.TextContent?.Trim()
+                   ?? document.QuerySelector(".product-title")?.TextContent?.Trim()
+                   ?? document.QuerySelector(".product-name")?.TextContent?.Trim()
+                   ?? document.QuerySelector("h1")?.TextContent?.Trim();
+
+        return !string.IsNullOrWhiteSpace(name);
     }
 
-    public ProductScrapedDto? Extract(IDocument document, string sourceUrl)
+    public Task<ProductScrapedDto?> Extract(IDocument document, string sourceUrl)
     {
         var name = ExtractName(document);
         if (string.IsNullOrWhiteSpace(name))
-            return null;
+            return Task.FromResult<ProductScrapedDto?>(null);
 
         var price = ExtractPrice(document);
         var description = ExtractDescription(document);
         var color = ExtractColor(document);
         var size = ExtractSize(document);
 
-        return new ProductScrapedDto
+        return Task.FromResult<ProductScrapedDto?>(new ProductScrapedDto
         {
             Name = name,
             Price = price,
@@ -36,7 +41,7 @@ public class GenericHtmlProductStrategy : IProductScraperStrategy
             Description = description,
             Color = color,
             Size = size
-        };
+        });
     }
 
     private string? ExtractName(IDocument document)

@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BaskIt.Common\BaskIt.Shared.csproj" />
     <ProjectReference Include="..\BaskIt.Domain\BaskIt.Domain.csproj" />
+    <ProjectReference Include="..\BaskIt.Shared\BaskIt.Shared.csproj" />
   </ItemGroup>
 
 </Project>

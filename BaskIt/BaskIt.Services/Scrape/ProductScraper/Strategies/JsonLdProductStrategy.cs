@@ -24,7 +24,7 @@ public class JsonLdProductStrategy : IProductScraperStrategy
         });
     }
 
-    public ProductScrapedDto? Extract(IDocument document, string sourceUrl)
+    public Task<ProductScrapedDto?> Extract(IDocument document, string sourceUrl)
     {
         var scripts = document.QuerySelectorAll("script[type='application/ld+json']");
 
@@ -43,7 +43,7 @@ public class JsonLdProductStrategy : IProductScraperStrategy
                 var product = FindProductInJson(root);
                 if (product.HasValue)
                 {
-                    return ExtractFromJsonElement(product.Value, sourceUrl);
+                    return Task.FromResult<ProductScrapedDto?>(ExtractFromJsonElement(product.Value, sourceUrl));
                 }
             }
             catch (JsonException)
@@ -53,7 +53,7 @@ public class JsonLdProductStrategy : IProductScraperStrategy
             }
         }
 
-        return null;
+        return Task.FromResult<ProductScrapedDto?>(null);
     }
 
     private JsonElement? FindProductInJson(JsonElement element)

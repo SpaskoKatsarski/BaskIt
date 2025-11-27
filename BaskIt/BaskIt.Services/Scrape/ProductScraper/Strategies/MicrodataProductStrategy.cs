@@ -16,22 +16,22 @@ public class MicrodataProductStrategy : IProductScraperStrategy
         return document.QuerySelector("[itemtype*='schema.org/Product']") != null;
     }
 
-    public ProductScrapedDto? Extract(IDocument document, string sourceUrl)
+    public Task<ProductScrapedDto?> Extract(IDocument document, string sourceUrl)
     {
         var productElem = document.QuerySelector("[itemtype*='schema.org/Product']");
         if (productElem == null)
-            return null;
+            return Task.FromResult<ProductScrapedDto?>(null);
 
         var name = productElem.QuerySelector("[itemprop='name']")?.TextContent?.Trim();
         if (string.IsNullOrWhiteSpace(name))
-            return null;
+            return Task.FromResult<ProductScrapedDto?>(null);
 
         var price = ExtractPrice(productElem);
         var description = productElem.QuerySelector("[itemprop='description']")?.TextContent?.Trim();
         var color = ExtractColor(productElem);
         var size = ExtractSize(productElem);
 
-        return new ProductScrapedDto
+        return Task.FromResult<ProductScrapedDto?>(new ProductScrapedDto
         {
             Name = name,
             Price = price,
@@ -39,7 +39,7 @@ public class MicrodataProductStrategy : IProductScraperStrategy
             Description = description,
             Color = color,
             Size = size
-        };
+        });
     }
 
     private decimal ExtractPrice(IElement productElem)
