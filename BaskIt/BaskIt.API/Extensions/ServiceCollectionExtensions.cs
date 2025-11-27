@@ -31,12 +31,15 @@ public static class ServiceCollectionExtensions
         return services;
     }
     
-    public static IServiceCollection AddChatClient(this IServiceCollection services, string model, string apiKey)
+    public static IServiceCollection AddChatClient(this IServiceCollection services, string model, string? apiKey)
     {
+        if (string.IsNullOrWhiteSpace(apiKey))
+        {
+            throw new ArgumentNullException("Cannot register chat client without a provided API key.");
+        }
+
         services.AddSingleton(serviceProvider =>
         {
-            var model = "gpt-4o-mini";
-
             return new ChatClient(model, apiKey);
         });
 

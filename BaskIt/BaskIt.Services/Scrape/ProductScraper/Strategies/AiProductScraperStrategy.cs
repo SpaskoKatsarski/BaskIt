@@ -117,7 +117,7 @@ public class AiProductScraperStrategy : IProductScraperStrategy
 
         var product = JsonSerializer.Deserialize<ProductScrapedDto>(content, options);
 
-        if (product == null || string.IsNullOrWhiteSpace(product.Name))
+        if (product == null)
         {
             logger.LogWarning("AI returned invalid product data for {Url}", sourceUrl);
             return null;

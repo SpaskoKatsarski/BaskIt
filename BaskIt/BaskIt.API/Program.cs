@@ -69,6 +69,7 @@ builder.Services.AddMediatR(cfg =>
 });
 
 builder.Services.AddWebScraperServices();
+builder.Services.AddChatClient("gpt-4o-mini", builder.Configuration["OPENAI_API_KEY"] ?? null);
 
 builder.Services.AddTransient<IRepository, Repository>();
 builder.Services.AddScoped<IJwtService, JwtService>();

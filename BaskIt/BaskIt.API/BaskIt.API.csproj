@@ -4,6 +4,7 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>a76dcbbc-323c-4c42-98ad-2b28e02f0fff</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,7 +24,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BaskIt.Commands\BaskIt.Commands.csproj" />
-    <ProjectReference Include="..\BaskIt.Common\BaskIt.Shared.csproj" />
     <ProjectReference Include="..\BaskIt.Queries\BaskIt.Queries.csproj" />
     <ProjectReference Include="..\BaskIt.ServiceDefaults\BaskIt.ServiceDefaults.csproj" />
     <ProjectReference Include="..\BaskIt.Shared\BaskIt.Shared.csproj" />
