@@ -66,6 +66,16 @@ public class JsonLdProductStrategy : IProductScraperStrategy
             return element;
         }
 
+        // ProductGroup with hasVariant (common pattern for products with multiple variants)
+        if (element.ValueKind == JsonValueKind.Object &&
+            element.TryGetProperty("@type", out var typeGroup) &&
+            typeGroup.GetString()?.Equals("ProductGroup", StringComparison.OrdinalIgnoreCase) == true &&
+            element.TryGetProperty("hasVariant", out var hasVariant))
+        {
+            // Return the first variant (Product)
+            return FindProductInJson(hasVariant);
+        }
+
         // Array of items
         if (element.ValueKind == JsonValueKind.Array)
         {

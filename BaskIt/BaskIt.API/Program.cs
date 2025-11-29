@@ -73,7 +73,7 @@ builder.Services.AddChatClient("gpt-4o-mini", builder.Configuration["OPENAI_API_
 
 builder.Services.AddTransient<IRepository, Repository>();
 builder.Services.AddScoped<IJwtService, JwtService>();
-builder.Services.AddScoped<IWebContentFetcher, WebContentFetcher>();
+builder.Services.AddSingleton<IWebContentFetcher, WebContentFetcher>();
 
 builder.Services.AddScoped<IProductScraperStrategy, JsonLdProductStrategy>();
 builder.Services.AddScoped<IProductScraperStrategy, OpenGraphProductStrategy>();

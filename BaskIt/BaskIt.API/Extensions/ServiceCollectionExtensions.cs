@@ -15,19 +15,6 @@ public static class ServiceCollectionExtensions
             QueueLimit = 5
         }));
 
-        services.AddHttpClient("WebScraper", client =>
-        {
-            // Chrome user-agent to avoid bot detection, by using User-Agent
-            client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
-            client.Timeout = TimeSpan.FromSeconds(30);
-        })
-            .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
-            {
-                PooledConnectionLifetime = TimeSpan.FromMinutes(5),
-                AutomaticDecompression = System.Net.DecompressionMethods.All
-            })
-            .AddStandardResilienceHandler();
-
         return services;
     }
     

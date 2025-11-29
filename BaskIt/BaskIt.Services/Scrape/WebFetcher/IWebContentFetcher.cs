@@ -2,7 +2,7 @@
 
 // TODO: Make this fetcher handle HTTP concerns, retries, rate limiting
 
-public interface IWebContentFetcher
+public interface IWebContentFetcher : IAsyncDisposable
 {
     Task<string> FetchHtmlAsync(string url, CancellationToken ct = default);
 }
