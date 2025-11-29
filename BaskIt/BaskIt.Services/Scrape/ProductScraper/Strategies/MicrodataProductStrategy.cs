@@ -30,6 +30,7 @@ public class MicrodataProductStrategy : IProductScraperStrategy
         var description = productElem.QuerySelector("[itemprop='description']")?.TextContent?.Trim();
         var color = ExtractColor(productElem);
         var size = ExtractSize(productElem);
+        var imageUrl = ExtractImageUrl(productElem);
 
         return Task.FromResult<ProductScrapedDto?>(new ProductScrapedDto
         {
@@ -38,7 +39,8 @@ public class MicrodataProductStrategy : IProductScraperStrategy
             WebsiteUrl = sourceUrl,
             Description = description,
             Color = color,
-            Size = size
+            Size = size,
+            ImageUrl = imageUrl
         });
     }
 
@@ -82,6 +84,20 @@ public class MicrodataProductStrategy : IProductScraperStrategy
         if (sizeElem != null)
         {
             return sizeElem.GetAttribute("content") ?? sizeElem.TextContent?.Trim();
+        }
+
+        return null;
+    }
+
+    private string? ExtractImageUrl(IElement productElem)
+    {
+        var imageElem = productElem.QuerySelector("[itemprop='image']");
+        if (imageElem != null)
+        {
+            // Image can be in content attribute, src attribute, or href
+            return imageElem.GetAttribute("content")
+                   ?? imageElem.GetAttribute("src")
+                   ?? imageElem.GetAttribute("href");
         }
 
         return null;

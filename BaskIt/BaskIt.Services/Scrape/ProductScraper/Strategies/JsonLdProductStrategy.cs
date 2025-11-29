@@ -97,6 +97,7 @@ public class JsonLdProductStrategy : IProductScraperStrategy
         var description = ExtractDescription(product);
         var color = ExtractColor(product);
         var size = ExtractSize(product);
+        var imageUrl = ExtractImageUrl(product);
 
         return new ProductScrapedDto
         {
@@ -105,7 +106,8 @@ public class JsonLdProductStrategy : IProductScraperStrategy
             WebsiteUrl = sourceUrl,
             Description = description,
             Color = color,
-            Size = size
+            Size = size,
+            ImageUrl = imageUrl
         };
     }
 
@@ -198,6 +200,32 @@ public class JsonLdProductStrategy : IProductScraperStrategy
                 {
                     return value.GetString();
                 }
+            }
+        }
+
+        return null;
+    }
+
+    private string? ExtractImageUrl(JsonElement product)
+    {
+        if (product.TryGetProperty("image", out var image))
+        {
+            // Image can be string, array of strings, or array of objects
+            if (image.ValueKind == JsonValueKind.String)
+                return image.GetString();
+
+            if (image.ValueKind == JsonValueKind.Array)
+            {
+                var firstImage = image.EnumerateArray().FirstOrDefault();
+
+                // Array of strings
+                if (firstImage.ValueKind == JsonValueKind.String)
+                    return firstImage.GetString();
+
+                // Array of objects with "url" property
+                if (firstImage.ValueKind == JsonValueKind.Object &&
+                    firstImage.TryGetProperty("url", out var url))
+                    return url.GetString();
             }
         }
 

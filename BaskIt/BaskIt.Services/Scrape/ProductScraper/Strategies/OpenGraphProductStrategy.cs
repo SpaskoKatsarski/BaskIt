@@ -38,6 +38,10 @@ public class OpenGraphProductStrategy : IProductScraperStrategy
         var size = GetMetaContent(document, "og:product:size")
                    ?? GetMetaContent(document, "product:size");
 
+        var imageUrl = GetMetaContent(document, "og:image")
+                       ?? GetMetaContent(document, "og:image:url")
+                       ?? GetMetaContent(document, "og:product:image");
+
         return Task.FromResult<ProductScrapedDto?>(new ProductScrapedDto
         {
             Name = name,
@@ -45,7 +49,8 @@ public class OpenGraphProductStrategy : IProductScraperStrategy
             WebsiteUrl = sourceUrl,
             Description = description,
             Color = color,
-            Size = size
+            Size = size,
+            ImageUrl = imageUrl
         });
     }
 

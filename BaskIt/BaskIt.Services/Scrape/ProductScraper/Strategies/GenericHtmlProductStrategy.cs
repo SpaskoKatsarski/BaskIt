@@ -32,6 +32,7 @@ public class GenericHtmlProductStrategy : IProductScraperStrategy
         var description = ExtractDescription(document);
         var color = ExtractColor(document);
         var size = ExtractSize(document);
+        var imageUrl = ExtractImageUrl(document);
 
         return Task.FromResult<ProductScrapedDto?>(new ProductScrapedDto
         {
@@ -40,7 +41,8 @@ public class GenericHtmlProductStrategy : IProductScraperStrategy
             WebsiteUrl = sourceUrl,
             Description = description,
             Color = color,
-            Size = size
+            Size = size,
+            ImageUrl = imageUrl
         });
     }
 
@@ -99,5 +101,28 @@ public class GenericHtmlProductStrategy : IProductScraperStrategy
                    ?? document.QuerySelector(".size")?.TextContent?.Trim();
 
         return size;
+    }
+
+    private string? ExtractImageUrl(IDocument document)
+    {
+        // Try common selectors for product image
+        var imageElem = document.QuerySelector(".product-image")
+                        ?? document.QuerySelector(".main-image")
+                        ?? document.QuerySelector("[data-product-image]")
+                        ?? document.QuerySelector(".product img")
+                        ?? document.QuerySelector("img[alt*='product']")
+                        // Fallback to og:image if available
+                        ?? document.QuerySelector("meta[property='og:image']");
+
+        if (imageElem != null)
+        {
+            // Try different attributes where image URL might be
+            return imageElem.GetAttribute("src")
+                   ?? imageElem.GetAttribute("data-src")
+                   ?? imageElem.GetAttribute("data-lazy")
+                   ?? imageElem.GetAttribute("content"); // For meta tags
+        }
+
+        return null;
     }
 }

@@ -16,6 +16,8 @@ public class Product
 
     public string? Description { get; set; }
 
+    public string? ImageUrl { get; set; }
+
     public Guid BasketId { get; set; }
 
     public Basket Basket { get; set; } = null!;

@@ -19,7 +19,8 @@ public static class ProductScraperPrompt
           "websiteUrl": "use the URL provided above",
           "size": "product size as string or null if not found",
           "color": "product color as string or null if not found",
-          "description": "product description as string or null if not found"
+          "description": "product description as string or null if not found",
+          "imageUrl": "main product image URL as string or null if not found"
         }
 
         Extraction Rules:
@@ -29,8 +30,9 @@ public static class ProductScraperPrompt
         4. "description": Extract the main product description (NOT reviews, specifications tables, or marketing copy)
         5. "color": Extract the currently selected/displayed color variant if available
         6. "size": Extract the currently selected/displayed size if available
-        7. If any field cannot be reliably extracted, use null for strings or 0 for price
-        8. Ensure all field names match EXACTLY (case-sensitive): name, price, websiteUrl, size, color, description
+        7. "imageUrl": Extract the main/primary product image URL (look for high-resolution product images, NOT icons or thumbnails)
+        8. If any field cannot be reliably extracted, use null for strings or 0 for price
+        9. Ensure all field names match EXACTLY (case-sensitive): name, price, websiteUrl, size, color, description, imageUrl
 
         OUTPUT FORMAT: Return ONLY the JSON object. Do not include:
         - Markdown code blocks (```json)
@@ -39,6 +41,6 @@ public static class ProductScraperPrompt
         - Any other formatting
 
         Example valid response:
-        {"name":"Nike Air Max 90","price":129.99,"websiteUrl":"https://example.com/product","size":"10","color":"Red","description":"Comfortable running shoes with air cushioning"}
+        {"name":"Nike Air Max 90","price":129.99,"websiteUrl":"https://example.com/product","size":"10","color":"Red","description":"Comfortable running shoes with air cushioning","imageUrl":"https://example.com/images/nike-air-max-90.jpg"}
         """;
 }

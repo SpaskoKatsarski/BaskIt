@@ -69,6 +69,7 @@ public class ProductScraperService : IProductScraperService
         existing.Size = !string.IsNullOrWhiteSpace(existing.Size) ? existing.Size : newData.Size;
         existing.Color = !string.IsNullOrWhiteSpace(existing.Color) ? existing.Color : newData.Color;
         existing.Description = !string.IsNullOrWhiteSpace(existing.Description) ? existing.Description : newData.Description;
+        existing.ImageUrl = !string.IsNullOrWhiteSpace(existing.ImageUrl) ? existing.ImageUrl : newData.ImageUrl;
     }
 
     private bool IsProductComplete(ProductScrapedDto? product)
