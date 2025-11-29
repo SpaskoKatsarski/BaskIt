@@ -2,11 +2,11 @@
 
 public class ProductScrapedDto
 {
-    public string Name { get; set; } = null!;
+    public string? Name { get; set; } = null!;
 
-    public decimal Price { get; set; }
+    public decimal? Price { get; set; }
 
-    public string WebsiteUrl { get; set; } = null!;
+    public string? WebsiteUrl { get; set; } = null!;
 
     public string? Size { get; set; }
 

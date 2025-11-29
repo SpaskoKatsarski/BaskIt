@@ -18,7 +18,7 @@ public class ProductScraperService : IProductScraperService
         this.contentFetcher = contentFetcher;
         this.strategies = strategies.OrderByDescending(s => s.Priority);
 
-        // Create AngleSharp browsing context (parses HTML)
+        // Create AngleSharp browsing context
         var config = Configuration.Default;
         this.browsingContext = BrowsingContext.New(config);
     }
@@ -27,21 +27,25 @@ public class ProductScraperService : IProductScraperService
     {
         var document = await this.browsingContext.OpenAsync(req => req.Content(html));
 
+        ProductScrapedDto? mergedProduct = null;
+
         foreach (var strategy in this.strategies)
         {
             if (strategy.CanHandle(document, sourceUrl))
             {
-                var result = await strategy.Extract(document, sourceUrl);
+                var extractedProduct = await strategy.Extract(document, sourceUrl);
 
-                if (result != null)
+                if (extractedProduct != null)
                 {
-                    return result;
+                    MergeProducts(ref mergedProduct, extractedProduct);
+
+                    if (IsProductComplete(mergedProduct))
+                        return mergedProduct;
                 }
             }
         }
 
-        // No strategy could extract product data
-        return null;
+        return mergedProduct;
     }
 
     public async Task<ProductScrapedDto?> ScrapeProductFromUrlAsync(string sourceUrl, CancellationToken ct = default)
@@ -49,5 +53,32 @@ public class ProductScraperService : IProductScraperService
         var html = await this.contentFetcher.FetchHtmlAsync(sourceUrl, ct);
 
         return await ScrapeProductAsync(html, sourceUrl);
+    }
+
+    private void MergeProducts(ref ProductScrapedDto? existing, ProductScrapedDto newData)
+    {
+        if (existing == null)
+        {
+            existing = newData;
+            return;
+        }
+
+        existing.Name = !string.IsNullOrWhiteSpace(existing.Name) ? existing.Name : newData.Name;
+        existing.Price = existing.Price ?? newData.Price;
+        existing.WebsiteUrl = !string.IsNullOrWhiteSpace(existing.WebsiteUrl) ? existing.WebsiteUrl : newData.WebsiteUrl;
+        existing.Size = !string.IsNullOrWhiteSpace(existing.Size) ? existing.Size : newData.Size;
+        existing.Color = !string.IsNullOrWhiteSpace(existing.Color) ? existing.Color : newData.Color;
+        existing.Description = !string.IsNullOrWhiteSpace(existing.Description) ? existing.Description : newData.Description;
+    }
+
+    private bool IsProductComplete(ProductScrapedDto? product)
+    {
+        return product != null
+            && !string.IsNullOrWhiteSpace(product.Name)
+            && product.Price.HasValue
+            && !string.IsNullOrWhiteSpace(product.WebsiteUrl)
+            && !string.IsNullOrWhiteSpace(product.Size)
+            && !string.IsNullOrWhiteSpace(product.Color)
+            && !string.IsNullOrWhiteSpace(product.Description);
     }
 }
