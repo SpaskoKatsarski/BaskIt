@@ -19,14 +19,17 @@ public class ProductController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpPost("add")]
-    public async Task<IActionResult> Add([FromBody] AddProductRequest request)
+    [HttpPost("preview")]
+    [ProducesResponseType(typeof(ProductScrapedDto), StatusCodes.Status200OK, Type = typeof(ProductScrapedDto))]
+    [ProducesResponseType(typeof(ProductScrapedDto), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Scrape([FromBody] ScrapeProductRequest request)
     {
-        var command = new ProductAddCommand(request.PageUrl);
-        // TODO: Send user id in order to add the product to the correct user's basket
+        var command = new ProductScrapeCommand(request.PageUrl);
 
         var result = await this.mediator.Send(command);
 
         return Ok(result);
     }
+
+    // TODO: Send user id in add endpoint in order to add the product to the correct user's basket
 }

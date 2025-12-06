@@ -5,20 +5,20 @@ using Microsoft.Extensions.Logging;
 
 namespace BaskIt.Commands.Product.Add;
 
-public class ProductAddCommandHandler : IRequestHandler<ProductAddCommand, ProductScrapedDto?>
+public class ProductScrapeCommandHandler : IRequestHandler<ProductScrapeCommand, ProductScrapedDto?>
 {
     private readonly IProductScraperService productScraperService;
-    private readonly ILogger<ProductAddCommandHandler> logger;
+    private readonly ILogger<ProductScrapeCommandHandler> logger;
 
-    public ProductAddCommandHandler(
+    public ProductScrapeCommandHandler(
         IProductScraperService productScraperService,
-        ILogger<ProductAddCommandHandler> logger)
+        ILogger<ProductScrapeCommandHandler> logger)
     {
         this.productScraperService = productScraperService;
         this.logger = logger;
     }
 
-    public async Task<ProductScrapedDto?> Handle(ProductAddCommand request, CancellationToken cancellationToken)
+    public async Task<ProductScrapedDto?> Handle(ProductScrapeCommand request, CancellationToken cancellationToken)
     {
         try
         {

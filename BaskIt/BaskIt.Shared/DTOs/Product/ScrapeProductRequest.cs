@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BaskIt.Shared.DTOs.Product;
 
-public class AddProductRequest
+public class ScrapeProductRequest
 {
     [Required]
     [Url]
