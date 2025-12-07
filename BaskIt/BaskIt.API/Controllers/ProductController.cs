@@ -18,6 +18,7 @@ public class ProductController : ControllerBase
         this.mediator = mediator;
     }
 
+    [AllowAnonymous]
     [HttpPost("preview")]
     [ProducesResponseType(typeof(ProductScrapedDto), StatusCodes.Status200OK, Type = typeof(ProductScrapedDto))]
     [ProducesResponseType(typeof(ProductScrapedDto), StatusCodes.Status400BadRequest)]

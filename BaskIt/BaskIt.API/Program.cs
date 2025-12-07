@@ -21,7 +21,7 @@ builder.AddServiceDefaults();
 
 builder.AddNpgsqlDbContext<BaskItDbContext>(connectionName: DatabaseName);
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
+builder.Services.AddIdentityCore<ApplicationUser>(options =>
 {
     options.Password.RequireDigit = false;
     options.Password.RequireLowercase = false;
@@ -29,6 +29,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequiredLength = 4;
 })
+.AddRoles<IdentityRole<Guid>>()
 .AddEntityFrameworkStores<BaskItDbContext>()
 .AddDefaultTokenProviders();
 

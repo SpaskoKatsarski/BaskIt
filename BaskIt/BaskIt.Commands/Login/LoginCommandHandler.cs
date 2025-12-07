@@ -9,18 +9,15 @@ namespace BaskIt.Commands.Login;
 public class LoginCommandHandler : IRequestHandler<LoginCommand, string>
 {
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IJwtService _jwtService;
     private readonly ILogger<LoginCommandHandler> _logger;
 
     public LoginCommandHandler(
         UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager,
         IJwtService jwtService,
         ILogger<LoginCommandHandler> logger)
     {
         _userManager = userManager;
-        _signInManager = signInManager;
         _jwtService = jwtService;
         _logger = logger;
     }
@@ -33,9 +30,9 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, string>
             throw new UnauthorizedAccessException("Invalid email or password");
         }
 
-        var result = await _signInManager.CheckPasswordSignInAsync(appUser, request.LoginRequest.Password, lockoutOnFailure: true);
+        var isPasswordValid = await _userManager.CheckPasswordAsync(appUser, request.LoginRequest.Password);
 
-        if (result.Succeeded)
+        if (isPasswordValid)
         {
             _logger.LogInformation("User {Email} logged in", request.LoginRequest.Email);
             var token = _jwtService.GenerateJwtToken(appUser.Email ?? string.Empty);
