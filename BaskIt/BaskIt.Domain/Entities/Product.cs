@@ -1,9 +1,9 @@
-﻿namespace BaskIt.Domain.Entities;
+﻿using BaskIt.Domain.Common;
 
-public class Product
+namespace BaskIt.Domain.Entities;
+
+public class Product : BaseEntity
 {
-    public Guid Id { get; set; }
-
     public string Name { get; set; } = null!;
 
     public decimal Price { get; set; }

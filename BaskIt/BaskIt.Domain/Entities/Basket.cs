@@ -1,9 +1,9 @@
-﻿namespace BaskIt.Domain.Entities;
+﻿using BaskIt.Domain.Common;
 
-public class Basket
+namespace BaskIt.Domain.Entities;
+
+public class Basket : BaseEntity
 {
-    public Guid Id { get; set; }
-
     public string Name { get; set; } = null!;
 
     public string? Description { get; set; }

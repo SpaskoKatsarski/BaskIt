@@ -1,5 +1,6 @@
 ﻿using BaskIt.Data;
 using BaskIt.Data.Common.Repository;
+using BaskIt.Domain.Common;
 using BaskIt.Shared.DTOs.Page;
 using Microsoft.EntityFrameworkCore;
 
@@ -138,6 +139,16 @@ public class Repository : IRepository
     /// <returns>Returns the number of affected rows.</returns>
     public async Task<int> SaveChangesAsync()
     {
+        var entries = context.ChangeTracker.Entries<BaseEntity>();
+
+        foreach (var entry in entries)
+        {
+            if (entry.State == EntityState.Added)
+            {
+                entry.Entity.CreatedAt = DateTime.UtcNow;
+            }
+        }
+
         return await context.SaveChangesAsync();
     }
 
@@ -164,5 +175,30 @@ public class Repository : IRepository
         where T : class
     {
         DbSet<T>().RemoveRange(entities);
+    }
+
+    /// <summary>
+    /// Soft deletes the specified entity by setting IsDeleted to true and DeletedAt to current time.
+    /// </summary>
+    /// <param name="entity">The entity to soft delete.</param>
+    public void SoftDelete<T>(T entity)
+        where T : BaseEntity
+    {
+        entity.IsDeleted = true;
+        entity.DeletedAt = DateTime.UtcNow;
+    }
+
+    /// <summary>
+    /// Soft deletes the entity with the specified id by setting IsDeleted to true and DeletedAt to current time.
+    /// </summary>
+    /// <param name="id">The id of the entity to soft delete.</param>
+    public async Task SoftDeleteById<T>(object id)
+        where T : BaseEntity
+    {
+        var entity = await GetByIdAsync<T>(id);
+        if (entity != null)
+        {
+            SoftDelete(entity);
+        }
     }
 }

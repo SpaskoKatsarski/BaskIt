@@ -1,4 +1,5 @@
-﻿using BaskIt.Shared.DTOs.Page;
+﻿using BaskIt.Domain.Common;
+using BaskIt.Shared.DTOs.Page;
 
 namespace BaskIt.Data.Common.Repository;
 
@@ -54,6 +55,20 @@ public interface IRepository
     /// <param name="id">The id of the entity to delete from the database.</param>
     Task DeleteById<T>(object id)
         where T : class;
+
+    /// <summary>
+    /// Soft deletes the specified entity by setting IsDeleted to true and DeletedAt to current time.
+    /// </summary>
+    /// <param name="entity">The entity to soft delete.</param>
+    void SoftDelete<T>(T entity)
+        where T : BaseEntity;
+
+    /// <summary>
+    /// Soft deletes the entity with the specified id by setting IsDeleted to true and DeletedAt to current time.
+    /// </summary>
+    /// <param name="id">The id of the entity to soft delete.</param>
+    Task SoftDeleteById<T>(object id)
+        where T : BaseEntity;
 
     /// <summary>
     /// Asynchronously saves all changes made in the database context.

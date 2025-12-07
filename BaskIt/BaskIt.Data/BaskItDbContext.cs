@@ -1,4 +1,5 @@
-﻿using BaskIt.Domain.Entities;
+﻿using BaskIt.Data.Configurations;
+using BaskIt.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -19,5 +20,7 @@ public class BaskItDbContext : IdentityDbContext<ApplicationUser, IdentityRole<G
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+
+        builder.ApplyConfigurationsFromAssembly(typeof(BaskItDbContext).Assembly);
     }
 }
