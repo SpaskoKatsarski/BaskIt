@@ -15,12 +15,14 @@ public class JwtService : IJwtService
         this.configuration = configuration;
     }
 
-    public string GenerateJwtToken(string email)
+    public string GenerateJwtToken(string userId, string email)
     {
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub, email),
+            new Claim(ClaimTypes.NameIdentifier, userId),
+            new Claim(JwtRegisteredClaimNames.Sub, userId),
             new Claim(JwtRegisteredClaimNames.Email, email),
+            new Claim(ClaimTypes.Email, email),
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.configuration["Jwt:SigningKey"]!));

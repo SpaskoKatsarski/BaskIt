@@ -35,7 +35,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, string>
         if (isPasswordValid)
         {
             _logger.LogInformation("User {Email} logged in", request.LoginRequest.Email);
-            var token = _jwtService.GenerateJwtToken(appUser.Email ?? string.Empty);
+            var token = _jwtService.GenerateJwtToken(appUser.Id.ToString(), appUser.Email ?? string.Empty);
             return token;
         }
 
