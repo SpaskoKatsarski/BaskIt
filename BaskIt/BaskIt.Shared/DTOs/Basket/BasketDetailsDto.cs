@@ -2,10 +2,15 @@ using BaskIt.Shared.DTOs.Product;
 
 namespace BaskIt.Shared.DTOs.Basket;
 
-public record BasketDetailsDto(
-    Guid Id,
-    string Name,
-    string? Description,
-    IEnumerable<ProductDto> Products,
-    DateTime CreatedAt
-);
+public class BasketDetailsDto
+{
+    public Guid Id { get; set; }
+
+    public string Name { get; set; } = null!;
+
+    public string? Description { get; set; }
+
+    public IEnumerable<ProductDto> Products { get; set; } = [];
+
+    public DateTime CreatedAt { get; set; }
+}

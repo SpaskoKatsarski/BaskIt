@@ -19,11 +19,12 @@ public class Repository : IRepository
     /// Asynchronously adds the specified entity to the database.
     /// </summary>
     /// <param name="entity">The entity to add to the database.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public async Task AddAsync<T>(T entity)
+    public async Task AddAsync<T>(T entity, CancellationToken cancellationToken = default)
         where T : class
     {
-        await DbSet<T>().AddAsync(entity);
+        await DbSet<T>().AddAsync(entity, cancellationToken);
     }
 
     /// <summary>
@@ -49,11 +50,16 @@ public class Repository : IRepository
     /// <summary>
     /// Retrieves paginated records of type T.
     /// </summary>
+    /// <param name="pageParams">Pagination parameters.</param>
+    /// <param name="selector">Projection selector.</param>
+    /// <param name="filterBy">Optional filter.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns></returns>
     public async Task<PageResult<TDto>> GetPaginatedAsync<TEntity, TDto>(
         PaginationParams pageParams,
         Func<IQueryable<TEntity>, IQueryable<TDto>> selector,
-        Func<IQueryable<TEntity>, IQueryable<TEntity>>? filterBy = null
+        Func<IQueryable<TEntity>, IQueryable<TEntity>>? filterBy = null,
+        CancellationToken cancellationToken = default
     )
         where TEntity : class
     {
@@ -64,14 +70,14 @@ public class Repository : IRepository
             query = filterBy(query);
         }
 
-        var totalCount = await query.CountAsync();
+        var totalCount = await query.CountAsync(cancellationToken);
 
         var projectedQuery = selector(query);
 
         var result = await projectedQuery
             .Skip((pageParams.PageNumber - 1) * pageParams.PageSize)
             .Take(pageParams.PageSize)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         return new PageResult<TDto>()
         {
@@ -106,11 +112,12 @@ public class Repository : IRepository
     /// Asynchronously retrieves an entity of type T from the database based on the specified id.
     /// </summary>
     /// <param name="id">The id of the entity to retrieve.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Returns the retrieved entity or null if not found.</returns>
-    public async Task<T?> GetByIdAsync<T>(object id)
+    public async Task<T?> GetByIdAsync<T>(object id, CancellationToken cancellationToken = default)
         where T : class
     {
-        return await DbSet<T>().FindAsync(id);
+        return await DbSet<T>().FindAsync(new[] { id }, cancellationToken);
     }
 
     /// <summary>
@@ -136,8 +143,9 @@ public class Repository : IRepository
     /// <summary>
     /// Asynchronously saves all changes made in the database context.
     /// </summary>
+    /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Returns the number of affected rows.</returns>
-    public async Task<int> SaveChangesAsync()
+    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var entries = context.ChangeTracker.Entries<BaseEntity>();
 
@@ -149,17 +157,18 @@ public class Repository : IRepository
             }
         }
 
-        return await context.SaveChangesAsync();
+        return await context.SaveChangesAsync(cancellationToken);
     }
 
     /// <summary>
     /// Deletes the entity with the specified id from the database.
     /// </summary>
     /// <param name="id">The id of the entity to delete from the database.</param>
-    public async Task DeleteById<T>(object id)
+    /// <param name="cancellationToken">Cancellation token.</param>
+    public async Task DeleteById<T>(object id, CancellationToken cancellationToken = default)
         where T : class
     {
-        var entity = await GetByIdAsync<T>(id);
+        var entity = await GetByIdAsync<T>(id, cancellationToken);
         if (entity != null)
         {
             DbSet<T>().Remove(entity);
@@ -192,10 +201,11 @@ public class Repository : IRepository
     /// Soft deletes the entity with the specified id by setting IsDeleted to true and DeletedAt to current time.
     /// </summary>
     /// <param name="id">The id of the entity to soft delete.</param>
-    public async Task SoftDeleteById<T>(object id)
+    /// <param name="cancellationToken">Cancellation token.</param>
+    public async Task SoftDeleteById<T>(object id, CancellationToken cancellationToken = default)
         where T : BaseEntity
     {
-        var entity = await GetByIdAsync<T>(id);
+        var entity = await GetByIdAsync<T>(id, cancellationToken);
         if (entity != null)
         {
             SoftDelete(entity);

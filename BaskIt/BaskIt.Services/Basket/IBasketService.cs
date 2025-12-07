@@ -5,17 +5,17 @@ namespace BaskIt.Services.Basket;
 
 public interface IBasketService
 {
-    Task<string> CreateBasketAsync(Guid userId, CreateBasketRequest request, CancellationToken cancellationToken = default);
+    Task<string> CreateBasketAsync(string userId, CreateBasketRequest request, CancellationToken cancellationToken = default);
 
-    Task<BasketDetailsDto?> GetBasketByIdAsync(Guid basketId, CancellationToken cancellationToken = default);
+    Task<BasketDetailsDto?> GetBasketByIdAsync(string basketId, CancellationToken cancellationToken = default);
 
-    Task<IEnumerable<BasketListDto>> GetUserBasketsAsync(Guid userId, CancellationToken cancellationToken = default);
+    Task<IEnumerable<BasketListDto>> GetUserBasketsAsync(string userId, CancellationToken cancellationToken = default);
 
-    Task UpdateBasketAsync(Guid basketId, UpdateBasketRequest request, CancellationToken cancellationToken = default);
+    Task UpdateBasketAsync(string basketId, UpdateBasketRequest request, CancellationToken cancellationToken = default);
 
-    Task DeleteBasketAsync(Guid basketId, CancellationToken cancellationToken = default);
+    Task DeleteBasketAsync(string basketId, CancellationToken cancellationToken = default);
 
-    Task<ProductDto> AddProductToBasketAsync(Guid basketId, ProductScrapedDto product, CancellationToken cancellationToken = default);
+    Task AddProductToBasketAsync(string basketId, ProductScrapedDto productDto, CancellationToken cancellationToken = default);
 
-    Task RemoveProductFromBasketAsync(Guid basketId, Guid productId, CancellationToken cancellationToken = default);
+    Task RemoveProductFromBasketAsync(string basketId, string productId, CancellationToken cancellationToken = default);
 }

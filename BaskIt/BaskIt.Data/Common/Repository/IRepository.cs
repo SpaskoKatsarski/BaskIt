@@ -22,24 +22,30 @@ public interface IRepository
     /// <summary>
     /// Retrieves paginated records of type T.
     /// </summary>
+    /// <param name="pageParams">Pagination parameters.</param>
+    /// <param name="selector">Projection selector.</param>
+    /// <param name="filterBy">Optional filter.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns></returns>
-    Task<PageResult<TDto>> GetPaginatedAsync<TEntity, TDto>(PaginationParams pageParams, Func<IQueryable<TEntity>, IQueryable<TDto>> selector, Func<IQueryable<TEntity>, IQueryable<TEntity>>? filterBy = null)
+    Task<PageResult<TDto>> GetPaginatedAsync<TEntity, TDto>(PaginationParams pageParams, Func<IQueryable<TEntity>, IQueryable<TDto>> selector, Func<IQueryable<TEntity>, IQueryable<TEntity>>? filterBy = null, CancellationToken cancellationToken = default)
     where TEntity : class;
 
     /// <summary>
     /// Asynchronously adds the specified entity to the database.
     /// </summary>
     /// <param name="entity">The entity to add to the database.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task AddAsync<T>(T entity)
+    Task AddAsync<T>(T entity, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>
     /// Asynchronously retrieves an entity of type T from the database based on the specified id.
     /// </summary>
     /// <param name="id">The id of the entity to retrieve.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Returns the retrieved entity or null if not founded.</returns>
-    Task<T?> GetByIdAsync<T>(object id)
+    Task<T?> GetByIdAsync<T>(object id, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>
@@ -53,7 +59,8 @@ public interface IRepository
     /// Deletes the entity with the specified id from the database.
     /// </summary>
     /// <param name="id">The id of the entity to delete from the database.</param>
-    Task DeleteById<T>(object id)
+    /// <param name="cancellationToken">Cancellation token.</param>
+    Task DeleteById<T>(object id, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>
@@ -67,14 +74,16 @@ public interface IRepository
     /// Soft deletes the entity with the specified id by setting IsDeleted to true and DeletedAt to current time.
     /// </summary>
     /// <param name="id">The id of the entity to soft delete.</param>
-    Task SoftDeleteById<T>(object id)
+    /// <param name="cancellationToken">Cancellation token.</param>
+    Task SoftDeleteById<T>(object id, CancellationToken cancellationToken = default)
         where T : BaseEntity;
 
     /// <summary>
     /// Asynchronously saves all changes made in the database context.
     /// </summary>
+    /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Returns the number of affected rows.</returns>
-    Task<int> SaveChangesAsync();
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Deletes multiple entities from the database.
