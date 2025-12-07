@@ -13,17 +13,33 @@ export default function HomePage() {
 
   const { data: product, isLoading, error } = useScrapeProduct(debouncedUrl);
 
+  const handleAddToBasket = () => {
+    // TODO: Implement basket selection and add product
+    // For now, just log to console
+    console.log('Add to basket clicked:', product);
+    alert('Basket functionality coming soon!');
+  };
+
   return (
-    <Stack gap={6}>
-      <Heading>Add Product to Basket</Heading>
+    <Box maxW="800px" mx="auto" w="100%" pt={12}>
+      <Stack gap={8}>
+        {/* Heading - Centered */}
+        <Heading size="2xl" textAlign="center" fontWeight="bold" color="gray.800">
+          Add Product to Basket
+        </Heading>
 
-      <UrlInput value={url} onChange={setUrl} />
+        {/* Input - Centered and Constrained */}
+        <Box maxW="600px" mx="auto" w="100%">
+          <UrlInput value={url} onChange={setUrl} />
+        </Box>
 
-      {isLoading && <ScrapingStatus />}
+        {/* Status and Results - Centered */}
+        {isLoading && <ScrapingStatus />}
 
-      {error && <ErrorMessage message={(error as any).message || 'Failed to scrape product'} />}
+        {error && <ErrorMessage message={(error as any).message || 'Failed to scrape product'} />}
 
-      {product && <ProductPreview product={product} />}
-    </Stack>
+        {product && <ProductPreview product={product} onAddToBasket={handleAddToBasket} />}
+      </Stack>
+    </Box>
   );
 }

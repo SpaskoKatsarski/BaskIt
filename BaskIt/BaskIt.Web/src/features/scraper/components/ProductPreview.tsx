@@ -53,7 +53,17 @@ export function ProductPreview({ product, onAddToBasket }: ProductPreviewProps) 
             </Flex>
 
             {onAddToBasket && (
-              <Button colorScheme="blue" size="lg" onClick={onAddToBasket} mt={4}>
+              <Button
+                size="sm"
+                onClick={onAddToBasket}
+                mt={4}
+                width="fit-content"
+                px={3}
+                bg="green.500"
+                color="white"
+                _hover={{ bg: 'green.600' }}
+                _active={{ bg: 'green.700' }}
+              >
                 Add to Basket
               </Button>
             )}
