@@ -19,7 +19,7 @@ public class ProductController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpPost("preview")]
+    [HttpPost("scrape")]
     [ProducesResponseType(typeof(ProductScrapedDto), StatusCodes.Status200OK, Type = typeof(ProductScrapedDto))]
     [ProducesResponseType(typeof(ProductScrapedDto), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Scrape([FromBody] ScrapeProductRequest request)
@@ -30,6 +30,4 @@ public class ProductController : ControllerBase
 
         return Ok(result);
     }
-
-    // TODO: Send user id in add endpoint in order to add the product to the correct user's basket
 }

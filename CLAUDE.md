@@ -34,9 +34,29 @@ BaskIt is a hybrid basket application that combines product organization with in
 - **Routing:** React Router
 
 ### Browser Extension
-- **Purpose:** Automatically detect product pages and suggest scraping
-- **Integration:** Communicates with the backend API to scrape products
-- **User Experience:** Non-intrusive suggestions when product pages are detected
+
+**Core Capabilities:**
+- **Product Detection**: Identifies e-commerce product pages while the user browses
+- **Scraping Integration**: Communicates with the API to scrape and store products
+- **Seamless Authentication**: Handles user authentication in the background without interrupting browsing
+
+**Detection Approach:**
+- URL pattern matching for common e-commerce platforms
+- DOM analysis for product-specific elements
+- Schema markup detection (OpenGraph, schema.org Product types)
+
+**Authentication Flow:**
+- User logs in via web app → JWT stored in web app localStorage
+- Extension's background script listens for storage changes → syncs token to Chrome storage API
+- All API requests from extension include JWT in Authorization header
+- If token expired/missing → extension prompts user to authenticate via web app
+- Token refresh handled automatically when user revisits web app
+
+**Integration with API:**
+- Extension sends detected product URLs to the scraping API
+- Receives scraped product data
+- Allows user to add products to baskets
+- Maintains sync with web application state
 
 ## User Flow
 
