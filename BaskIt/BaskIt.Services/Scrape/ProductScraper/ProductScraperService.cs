@@ -37,7 +37,7 @@ public class ProductScraperService : IProductScraperService
 
                 if (extractedProduct != null)
                 {
-                    MergeProducts(ref mergedProduct, extractedProduct);
+                    MergeProducts(mergedProduct, extractedProduct);
 
                     if (IsProductComplete(mergedProduct))
                         return mergedProduct;
@@ -55,7 +55,7 @@ public class ProductScraperService : IProductScraperService
         return await ScrapeProductAsync(html, sourceUrl);
     }
 
-    private void MergeProducts(ref ProductScrapedDto? existing, ProductScrapedDto newData)
+    private void MergeProducts(ProductScrapedDto? existing, ProductScrapedDto newData)
     {
         if (existing == null)
         {

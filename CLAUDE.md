@@ -2,19 +2,29 @@
 
 ## Project Overview
 
-BaskIt is a hybrid basket application that allows users to scrape product information from any web page by pasting a URL. Users can preview scraped products and organize them into multiple baskets.
+BaskIt is a hybrid basket application that combines product organization with intelligent review aggregation. The application features a browser extension that automatically detects product pages and suggests scraping, eliminating the need for manual URL entry. It also includes a review generation system that crawls multiple sources (Reddit, forums, review sites) to extract and synthesize public opinions about products.
+
+**Key Features:**
+- **Browser Extension:** Automatically detects product pages and suggests scraping
+- **Product Organization:** Users can preview scraped products and organize them into multiple baskets
+- **Review Aggregation:** Web crawling to find and synthesize product reviews from Reddit and other platforms
 
 **Tech Stack:**
-- **Backend:** .NET Core Web API with Playwright for web scraping
-- **Frontend:** React + TypeScript + Vite + Chakra UI + TanStack Query + Zustand
+- **Backend:** .NET Core Web API with Clean Architecture (CQRS) and Playwright for web scraping
+- **Frontend:** React + TypeScript + Vite + Chakra UI + TanStack Query + Zustand (Feature-Sliced Design)
+- **Extension:** Browser extension for automatic product detection
 
 ## Architecture
 
 ### Backend (.NET Core Web API)
+- **Architecture:** Clean Architecture with CQRS pattern
 - **Purpose:** Receive URLs and extract product information using web scraping
 - **Scraping:** Implemented with Playwright using multiple scraping strategies with priority/fallback mechanism
+- **Review Aggregation:** Web crawling to extract reviews and opinions from Reddit, forums, and review platforms for products in user baskets
+- **Review Generation:** Synthesizes collected data into comprehensive product reviews
 
 ### Frontend (BaskIt.Web)
+- **Architecture:** Feature-Sliced Design
 - **Framework:** React 18+ with TypeScript
 - **Build Tool:** Vite
 - **UI Library:** Chakra UI
@@ -23,13 +33,32 @@ BaskIt is a hybrid basket application that allows users to scrape product inform
   - Zustand for UI state
 - **Routing:** React Router
 
+### Browser Extension
+- **Purpose:** Automatically detect product pages and suggest scraping
+- **Integration:** Communicates with the backend API to scrape products
+- **User Experience:** Non-intrusive suggestions when product pages are detected
+
 ## User Flow
 
-1. User pastes a product URL into an input field
+### Primary Flow (Browser Extension)
+1. User visits a product page on any e-commerce website
+2. Browser extension automatically detects the product page
+3. Extension suggests scraping the product information
+4. User accepts the suggestion
+5. Product information is scraped and sent to the application
+6. Product preview is displayed to the user
+7. User adds the product to one of their baskets
+8. User can request review generation for products in their basket
+9. System crawls multiple sources (Reddit, forums, review sites) and generates aggregated reviews
+
+### Alternative Flow (Manual URL Entry)
+1. User pastes a product URL into an input field in the web application
 2. **Without clicking a button**, the URL is debounced and sent to the API
 3. API scrapes the product information using multiple strategies
 4. Product preview is displayed to the user
 5. User can add the product to one of their baskets (they may have multiple baskets)
+6. User can request review generation for products in their basket
+7. System crawls multiple sources and generates aggregated reviews
 
 ## Frontend Project Structure
 
