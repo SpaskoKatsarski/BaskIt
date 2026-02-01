@@ -30,8 +30,17 @@ apiClient.interceptors.response.use(
   (error) => {
     // Handle 401 Unauthorized - token expired or invalid
     if (error.response?.status === 401) {
-      localStorage.removeItem('auth_token');
-      window.location.href = '/login';
+      const token = localStorage.getItem('auth_token');
+      const currentPath = window.location.pathname;
+
+      // Only redirect if we had a token (expired) and we're not already on login/register
+      if (token && !currentPath.startsWith('/login') && !currentPath.startsWith('/register')) {
+        localStorage.removeItem('auth_token');
+        window.location.href = '/login';
+      } else if (token) {
+        // Just clear the token if we're already on login/register
+        localStorage.removeItem('auth_token');
+      }
     }
 
     if (!error.response) {

@@ -1,15 +1,11 @@
 using BaskIt.API.Extensions;
 using BaskIt.API.Middleware;
 using BaskIt.Data;
-using BaskIt.Data.Common.Repository;
 using BaskIt.Domain.Entities;
-using BaskIt.Services.Jwt;
-using BaskIt.Services.Scrape.ProductScraper;
-using BaskIt.Services.Scrape.ProductScraper.Strategies;
-using BaskIt.Services.Scrape.WebFetcher;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using System.Text;
@@ -72,17 +68,7 @@ builder.Services.AddMediatR(cfg =>
 builder.Services.AddWebScraperServices();
 builder.Services.AddChatClient("gpt-4o-mini", builder.Configuration["OPENAI_API_KEY"] ?? null);
 
-builder.Services.AddTransient<IRepository, Repository>();
-builder.Services.AddScoped<IJwtService, JwtService>();
-builder.Services.AddSingleton<IWebContentFetcher, WebContentFetcher>();
-
-builder.Services.AddScoped<IProductScraperStrategy, JsonLdProductStrategy>();
-builder.Services.AddScoped<IProductScraperStrategy, OpenGraphProductStrategy>();
-builder.Services.AddScoped<IProductScraperStrategy, MicrodataProductStrategy>();
-builder.Services.AddScoped<IProductScraperStrategy, GenericHtmlProductStrategy>();
-builder.Services.AddScoped<IProductScraperStrategy, AiProductScraperStrategy>();
-
-builder.Services.AddScoped<IProductScraperService, ProductScraperService>();
+builder.Services.RegisterServices();
 
 // Add exception handler
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -113,7 +99,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors();
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthentication();
 app.UseAuthorization();

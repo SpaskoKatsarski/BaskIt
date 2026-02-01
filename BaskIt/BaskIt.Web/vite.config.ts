@@ -10,4 +10,9 @@ export default defineConfig({
       },
     }),
   ],
+  server: {
+    port: parseInt(process.env.PORT || '5173'),
+    host: true, // Listen on all network interfaces
+    strictPort: false, // Allow fallback to another port if specified port is in use
+  },
 })

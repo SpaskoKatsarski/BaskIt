@@ -30,3 +30,8 @@ export interface CreateBasketRequest {
   name: string;
   description?: string;
 }
+
+export interface UpdateBasketRequest {
+  name: string;
+  description?: string;
+}

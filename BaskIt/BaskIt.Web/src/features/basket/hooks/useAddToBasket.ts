@@ -13,8 +13,10 @@ export function useAddToBasket() {
   return useMutation({
     mutationFn: ({ basketId, product }: AddToBasketParams) =>
       addProductToBasket(basketId, product),
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
+      // Invalidate both the baskets list and the specific basket details
       queryClient.invalidateQueries({ queryKey: ['baskets'] });
+      queryClient.invalidateQueries({ queryKey: ['basket', variables.basketId] });
     },
   });
 }

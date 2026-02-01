@@ -6,18 +6,20 @@ import { ErrorMessage } from '../features/scraper/components/ErrorMessage';
 import { ProductPreview } from '../features/scraper/components/ProductPreview';
 import { useScrapeProduct } from '../features/scraper/hooks/useScrapeProduct';
 import { useDebounce } from '../shared/hooks/useDebounce';
+import { BasketSelector } from '../features/basket/components/BasketSelector';
+import { useBasketUIStore } from '../features/basket/store/basketUIStore';
 
 export default function HomePage() {
   const [url, setUrl] = useState('');
   const debouncedUrl = useDebounce(url, 800);
 
   const { data: product, isLoading, error } = useScrapeProduct(debouncedUrl);
+  const { openSelector } = useBasketUIStore();
 
   const handleAddToBasket = () => {
-    // TODO: Implement basket selection and add product
-    // For now, just log to console
-    console.log('Add to basket clicked:', product);
-    alert('Basket functionality coming soon!');
+    if (product) {
+      openSelector(product);
+    }
   };
 
   return (
@@ -40,6 +42,9 @@ export default function HomePage() {
 
         {product && <ProductPreview product={product} onAddToBasket={handleAddToBasket} />}
       </Stack>
+
+      {/* Basket Selector Modal */}
+      <BasketSelector />
     </Box>
   );
 }
